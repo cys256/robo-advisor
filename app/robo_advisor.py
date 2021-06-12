@@ -6,6 +6,7 @@ import json
 from datetime import datetime
 now = datetime.now()
 
+
 def to_usd(myprice):
     return "${0:,.2f}".format(myprice)
 
@@ -56,18 +57,36 @@ recent_low = min(low_prices)
 
 print("-------------------------")
 print("SELECTED SYMBOL:", t)
+
 print("-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
 dt_string = now.strftime("%m/%d/%Y %H:%M %p")
 print("REQUEST AT:", dt_string)
+
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
+
 print("-------------------------")
-print("RECOMMENDATION: BUY!")
-print("RECOMMENDATION REASON: TODO")
+if float(latest_close) < 1.2 * float(recent_low):
+    print("RECOMMENDATION: BUY!")
+    print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS LESS THAN 20% ABOVE ITS RECENT LOW")
+else:
+    print("RECOMMENDATION: DON'T BUY!")
+    print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS GREATER THAN 20% ABOVE ITS RECENT LOW")
+
 print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
+
+
+#from pandas import read_csv
+
+#csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
+
+#historical_prices = read_csv(response.text)
+
+#with open(csv_file_path, "w") as csv_file:
+    #print(historical_prices.head())
