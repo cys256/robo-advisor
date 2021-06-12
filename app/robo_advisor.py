@@ -32,17 +32,26 @@ last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
 tsd = parsed_response["Time Series (Daily)"]
 
-dates = list(tsd.keys()) #TODO: sort to ensure latest day is first
+dates = list(tsd.keys()) 
+dates.sort(reverse = True)
 
 latest_day = dates[0]
 
 latest_close = tsd[latest_day]["4. close"]
 
+high_prices = []
+
+for date in dates:
+    high_price = tsd[date]["2. high"]
+    high_prices.append(float(high_price))
+
+recent_high = max(high_prices)
+
 #breakpoint()
 
 
 print("-------------------------")
-print("SELECTED SYMBOL: ", t)
+print("SELECTED SYMBOL:", t)
 print("-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
 dt_string = now.strftime("%m/%d/%Y %H:%M %p")
@@ -50,7 +59,7 @@ print("REQUEST AT:", dt_string)
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
-print("RECENT HIGH: $101,000.00")
+print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print("RECENT LOW: $99,000.00")
 print("-------------------------")
 print("RECOMMENDATION: BUY!")
