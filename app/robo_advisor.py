@@ -15,17 +15,9 @@ load_dotenv() # go get env vars from the .env file
 # read env variables
 ALPHAVANTAGE_API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
 
-# make a request
 
-
-#while True:
-    #symbol = input("PLEASE ENTER A VALID STOCK TICKER TO SEE RECOMMENDATION: ")
-    #t = symbol.upper()
-    #if len(symbol) < 6:
-        #break
-    #else:
-        #print("TICKER IS INVALID, PLEASE ENTER A VALID STOCK TICKER")
-        #continue
+#symbol = input("PLEASE ENTER A VALID STOCK TICKER TO SEE RECOMMENDATION: ")
+#t = symbol.upper()
 
 #request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&apikey={ALPHAVANTAGE_API_KEY}"
 
@@ -35,21 +27,14 @@ ALPHAVANTAGE_API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
 #print(response.text)
 
 #parsed_response = json.loads(response.text) # converts to dictionary
-
-
-
-#try:
-    #last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
-#except KeyError:
-    #print("SORRY! COULDN'T FIND ANY TRADING DATA FOR THAT STOCK TICKER, PLEASE ENTER A VALID STOCK TICKER")
-
+#last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"] #
 
 
 while True:
     symbol = input("PLEASE ENTER A VALID STOCK TICKER TO SEE RECOMMENDATION: ")
     t = symbol.upper()
-    if len(symbol) > 5:
-        print("TICKER IS INVALID, PLEASE ENTER A VALID STOCK TICKER")
+    if len(symbol) > 5: # preliminary validation on user input before requesting data
+        print("TICKER IS INVALID, PLEASE ENTER A VALID STOCK TICKER") # 
         continue
     else:
         try:
@@ -59,9 +44,9 @@ while True:
             #print(response.status_code) #> 200
             #print(response.text)
             parsed_response = json.loads(response.text) # converts to dictionary
-            last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
-            break
-        except KeyError:
+            last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"] #
+            break # exit loop
+        except KeyError: # addresses KeyError message when stock ticker is not found when the system makes an httip request
             print("SORRY! COULDN'T FIND ANY TRADING DATA FOR THAT STOCK TICKER, PLEASE ENTER A VALID STOCK TICKER")
             continue
 
@@ -86,7 +71,6 @@ for date in dates:
 
 recent_high = max(high_prices)
 recent_low = min(low_prices)
-
 
 
 #breakpoint()
