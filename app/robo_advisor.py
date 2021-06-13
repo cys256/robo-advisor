@@ -16,9 +16,17 @@ load_dotenv() # go get env vars from the .env file
 ALPHAVANTAGE_API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
 
 # make a request
-#symbol = "MSFT" 
-symbol = input("Please enter a valid stock ticker to see recommendation: ")
-t = symbol.upper()
+
+while True:
+    symbol = input("PLEASE ENTER A VALID STOCK TICKER TO SEE RECOMMENDATION: ")
+    t = symbol.upper()
+    if len(symbol) < 5:
+        print("GOOD CHOICE!")
+        break
+    else:
+        print("PLEASE ENTER VALID STOCK TICKER")
+        continue
+
 
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&apikey={ALPHAVANTAGE_API_KEY}"
 
@@ -52,34 +60,38 @@ for date in dates:
 recent_high = max(high_prices)
 recent_low = min(low_prices)
 
+
+
 #breakpoint()
 
+try:
+    print("-------------------------")
+    print("SELECTED SYMBOL:", t)
 
-print("-------------------------")
-print("SELECTED SYMBOL:", t)
+    print("-------------------------")
+    print("REQUESTING STOCK MARKET DATA...")
+    dt_string = now.strftime("%m/%d/%Y %H:%M %p")
+    print("REQUEST AT:", dt_string)
 
-print("-------------------------")
-print("REQUESTING STOCK MARKET DATA...")
-dt_string = now.strftime("%m/%d/%Y %H:%M %p")
-print("REQUEST AT:", dt_string)
+    print("-------------------------")
+    print(f"LATEST DAY: {last_refreshed}")
+    print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
+    print(f"RECENT HIGH: {to_usd(float(recent_high))}")
+    print(f"RECENT LOW: {to_usd(float(recent_low))}")
 
-print("-------------------------")
-print(f"LATEST DAY: {last_refreshed}")
-print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
-print(f"RECENT HIGH: {to_usd(float(recent_high))}")
-print(f"RECENT LOW: {to_usd(float(recent_low))}")
+    print("-------------------------")
+    if float(latest_close) < 1.2 * float(recent_low):
+        print("RECOMMENDATION: BUY!")
+        print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS LESS THAN 20% ABOVE ITS RECENT LOW")
+    else:
+        print("RECOMMENDATION: DON'T BUY!")
+        print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS GREATER THAN 20% ABOVE ITS RECENT LOW")
 
-print("-------------------------")
-if float(latest_close) < 1.2 * float(recent_low):
-    print("RECOMMENDATION: BUY!")
-    print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS LESS THAN 20% ABOVE ITS RECENT LOW")
-else:
-    print("RECOMMENDATION: DON'T BUY!")
-    print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS GREATER THAN 20% ABOVE ITS RECENT LOW")
-
-print("-------------------------")
-print("HAPPY INVESTING!")
-print("-------------------------")
+    print("-------------------------")
+    print("HAPPY INVESTING!")
+    print("-------------------------")
+except KeyError:
+    print("OOPS")
 
 
 #from pandas import read_csv
