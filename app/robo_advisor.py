@@ -17,36 +17,63 @@ ALPHAVANTAGE_API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
 
 # make a request
 
-while True:
-    symbol = input("PLEASE ENTER A VALID STOCK TICKER TO SEE RECOMMENDATION: ")
-    t = symbol.upper()
-    if len(symbol) < 5:
-        print("GOOD CHOICE!")
-        break
-    else:
-        print("PLEASE ENTER VALID STOCK TICKER")
-        continue
 
+#while True:
+    #symbol = input("PLEASE ENTER A VALID STOCK TICKER TO SEE RECOMMENDATION: ")
+    #t = symbol.upper()
+    #if len(symbol) < 6:
+        #break
+    #else:
+        #print("TICKER IS INVALID, PLEASE ENTER A VALID STOCK TICKER")
+        #continue
 
-request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&apikey={ALPHAVANTAGE_API_KEY}"
+#request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&apikey={ALPHAVANTAGE_API_KEY}"
 
-response = requests.get(request_url)
+#response = requests.get(request_url)
 #print(type(response))
 #print(response.status_code) #> 200
 #print(response.text)
 
-parsed_response = json.loads(response.text) # converts to dictionary
+#parsed_response = json.loads(response.text) # converts to dictionary
 
-last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+
+
+#try:
+    #last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+#except KeyError:
+    #print("SORRY! COULDN'T FIND ANY TRADING DATA FOR THAT STOCK TICKER, PLEASE ENTER A VALID STOCK TICKER")
+
+
+
+while True:
+    symbol = input("PLEASE ENTER A VALID STOCK TICKER TO SEE RECOMMENDATION: ")
+    t = symbol.upper()
+    if len(symbol) > 5:
+        print("TICKER IS INVALID, PLEASE ENTER A VALID STOCK TICKER")
+        continue
+    else:
+        try:
+            request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={symbol}&apikey={ALPHAVANTAGE_API_KEY}"
+            response = requests.get(request_url)
+            #print(type(response))
+            #print(response.status_code) #> 200
+            #print(response.text)
+            parsed_response = json.loads(response.text) # converts to dictionary
+            last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+            break
+        except KeyError:
+            print("SORRY! COULDN'T FIND ANY TRADING DATA FOR THAT STOCK TICKER, PLEASE ENTER A VALID STOCK TICKER")
+            continue
+
 
 tsd = parsed_response["Time Series (Daily)"]
 
-dates = list(tsd.keys()) 
-dates.sort(reverse = True)
+dates = list(tsd.keys()) # all the dates/keys are put in a list
+dates.sort(reverse = True) # list is sorted in descending order
 
-latest_day = dates[0]
+latest_day = dates[0] # select first date in the list
 
-latest_close = tsd[latest_day]["4. close"]
+latest_close = tsd[latest_day]["4. close"] # select latest close price of the first in the list
 
 high_prices = []
 low_prices = []
@@ -64,34 +91,32 @@ recent_low = min(low_prices)
 
 #breakpoint()
 
-try:
-    print("-------------------------")
-    print("SELECTED SYMBOL:", t)
+print("-------------------------")
+print("SELECTED SYMBOL:", t)
 
-    print("-------------------------")
-    print("REQUESTING STOCK MARKET DATA...")
-    dt_string = now.strftime("%m/%d/%Y %H:%M %p")
-    print("REQUEST AT:", dt_string)
+print("-------------------------")
+print("REQUESTING STOCK MARKET DATA...")
+dt_string = now.strftime("%m/%d/%Y %H:%M %p")
+print("REQUEST AT:", dt_string)
 
-    print("-------------------------")
-    print(f"LATEST DAY: {last_refreshed}")
-    print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
-    print(f"RECENT HIGH: {to_usd(float(recent_high))}")
-    print(f"RECENT LOW: {to_usd(float(recent_low))}")
+print("-------------------------")
+print(f"LATEST DAY: {last_refreshed}")
+print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
+print(f"RECENT HIGH: {to_usd(float(recent_high))}")
+print(f"RECENT LOW: {to_usd(float(recent_low))}")
 
-    print("-------------------------")
-    if float(latest_close) < 1.2 * float(recent_low):
-        print("RECOMMENDATION: BUY!")
-        print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS LESS THAN 20% ABOVE ITS RECENT LOW")
-    else:
-        print("RECOMMENDATION: DON'T BUY!")
-        print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS GREATER THAN 20% ABOVE ITS RECENT LOW")
+print("-------------------------")
+if float(latest_close) < 1.2 * float(recent_low):
+    print("RECOMMENDATION: BUY!")
+    print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS LESS THAN 20% ABOVE ITS RECENT LOW")
+else:
+    print("RECOMMENDATION: DON'T BUY!")
+    print("RECOMMENDATION REASON: BECAUSE", t, "STOCK'S LATEST CLOSING PRICE IS GREATER THAN 20% ABOVE ITS RECENT LOW")
 
-    print("-------------------------")
-    print("HAPPY INVESTING!")
-    print("-------------------------")
-except KeyError:
-    print("OOPS")
+print("-------------------------")
+print("HAPPY INVESTING!")
+print("-------------------------")
+
 
 
 #from pandas import read_csv
