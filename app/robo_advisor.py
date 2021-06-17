@@ -103,11 +103,23 @@ print("-------------------------")
 
 
 
-#from pandas import read_csv
+#import pandas as pd
 
-#csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
+#df = pd.DataFrame(tsd)
 
-#historical_prices = read_csv(response.text)
+#days = []
+#for k,v in tsd.items():
+    #days.append({
+        #"date": k,
+        #"open": v["1. open"],
+        #"high": v["2. high"],
+        #"low": v["3. low"],
+        #"close": v["4. close"],
+        #"adjusted close": v["5. adjusted close"],
+        #"volume": v["5. volume"],
+        #"dividend amount": v["7. dividend amount"],
+        #"split coefficient": v["8. split coefficient"],
+    #})
 
-#with open(csv_file_path, "w") as csv_file:
-    #print(historical_prices.head())
+#df.to_csv('robo-advisor.csv')
+#df.to_csv('C:/Users/abc/Desktop/robo-advisor/data/file_name.csv')
