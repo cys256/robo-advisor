@@ -75,6 +75,7 @@ recent_low = min(low_prices)
 
 #breakpoint()
 
+
 print("-------------------------")
 print("SELECTED SYMBOL:", t)
 
@@ -103,23 +104,33 @@ print("-------------------------")
 
 
 
-#import pandas as pd
+import pandas as pd
 
-#df = pd.DataFrame(tsd)
+days = []
+for k,v in tsd.items():
+    days.append({
+        "date": k,
+        "open": v["1. open"],
+        "high": v["2. high"],
+        "low": v["3. low"],
+        "close": v["4. close"],
+        "adjusted close": v["5. adjusted close"],
+        "volume": v["6. volume"],
+        "dividend amount": v["7. dividend amount"],
+        "split coefficient": v["8. split coefficient"],
+    })
 
-#days = []
-#for k,v in tsd.items():
-    #days.append({
-        #"date": k,
-        #"open": v["1. open"],
-        #"high": v["2. high"],
-        #"low": v["3. low"],
-        #"close": v["4. close"],
-        #"adjusted close": v["5. adjusted close"],
-        #"volume": v["5. volume"],
-        #"dividend amount": v["7. dividend amount"],
-        #"split coefficient": v["8. split coefficient"],
-    #})
+df = pd.DataFrame(days)
+
+#breakpoint()
+
+csv_filepath = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv") 
+df.to_csv(csv_filepath)
+#adapts to os of person running this
+#dirname references relative location of this file (which is app)
+#".." moves up one, "data" then specifies folder and "prices.csv" specifies file name
+
+
 
 #df.to_csv('robo-advisor.csv')
 #df.to_csv('C:/Users/abc/Desktop/robo-advisor/data/file_name.csv')
