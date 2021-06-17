@@ -12,3 +12,4 @@
 + When prompted by the program, enter a valid stock ticker
 + The program will generate market data on the stock, a recommendation, and a reason for the recommendation.
 + Execute the program again using the command "python app/robo_advisor.py" if you would like to obtain the same information on another stock
++ Note: a local file named prices.csv will be generated in the data folder with the historical prices
